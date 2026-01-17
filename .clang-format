@@ -1,0 +1,16 @@
+﻿---
+BasedOnStyle: Google
+AlignAfterOpenBracket: AlwaysBreak
+AlignConsecutiveAssignments: 'false'
+AllowAllConstructorInitializersOnNextLine: 'true'
+AllowShortBlocksOnASingleLine: 'true'
+AllowShortCaseLabelsOnASingleLine: 'true'
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: Always
+IndentWidth: '4'
+Language: Cpp
+PointerAlignment: Right
+SortIncludes: 'true'
+UseTab: Never
+
+...
