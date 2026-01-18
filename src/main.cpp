@@ -4,6 +4,7 @@
 #include <memory>
 #include <cctype>
 #include <algorithm>
+#include <chrono>
 
 #include "closer.hpp"
 #include "array.hpp"
@@ -18,6 +19,7 @@
 void runSorter(Sorter *sorter, Array &arr) {
     std::thread worker([sorter, &arr](){
         try {
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
             sorter->sort(arr);
         } catch (const SorterInterrupt &e) {
             return;
@@ -42,6 +44,7 @@ std::unique_ptr<Sorter> makeSorter(std::string sorter, bool is_reversed) {
 int parseNumber(const char *arg) {
     try {
         int ret = std::stoi(arg);
+        if (ret < 0) return -1;
         return ret;
     } catch (const std::exception &e) {
         std::cerr << "Error : " << e.what() << std::endl;
