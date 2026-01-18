@@ -10,6 +10,11 @@
 #include "sorter.hpp"
 #include "window.hpp"
 
+#define ARGV_SHIFT(argc_ptr, argv_ptr) ( \
+    --(*(argc_ptr)),                     \
+    *(*(argv_ptr))++                     \
+)
+
 void runSorter(Sorter *sorter, Array &arr) {
     std::thread worker([sorter, &arr](){
         try {
@@ -34,19 +39,15 @@ std::unique_ptr<Sorter> makeSorter(std::string sorter, bool is_reversed) {
     return std::unique_ptr<Sorter>(ret);
 }
 
-int parseNumber(char ***arg) {
-    std::string num = **arg++;
+int parseNumber(const char *arg) {
     try {
-        int ret = std::stoi(num);
+        int ret = std::stoi(arg);
         return ret;
     } catch (const std::exception &e) {
+        std::cerr << arg << std::endl;
         std::cerr << "Error : " << e.what() << std::endl;
         return -1;
     }
-}
-
-std::string parseString(char ***arg) {
-    return std::string(**arg++);
 }
 
 int main(int argc, char **argv) {
@@ -70,20 +71,22 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    ARGV_SHIFT(&argc, &argv);
+
     int n = 0;
 
-    std::string sorter_name = parseString(&argv);
+    std::string sorter_name = ARGV_SHIFT(&argc, &argv);
 
-    if ((n = parseNumber(&argv)) == -1) goto print_usage;
+    if ((n = parseNumber(ARGV_SHIFT(&argc, &argv))) == -1) goto print_usage;
     size_t elements = n;
 
-    if ((n = parseNumber(&argv)) == -1) goto print_usage;
+    if ((n = parseNumber(ARGV_SHIFT(&argc, &argv))) == -1) goto print_usage;
     int speed = n;
 
-    std::string reversed = parseString(&argv);
+    std::string reversed = ARGV_SHIFT(&argc, &argv);
     std::transform(reversed.begin(), reversed.end(), reversed.begin(), [](unsigned char c) {return std::tolower(c);});
 
-    if (reversed != "t" || reversed != "f") goto print_usage;
+    if (reversed != "t" && reversed != "f") goto print_usage;
 
     Array arr(elements);
 
