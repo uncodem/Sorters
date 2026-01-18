@@ -6,8 +6,9 @@
 #include "array.hpp"
 #include "closer.hpp"
 
-Window::Window(int width, int height, const char *title, const Array &data)
-    : window(new sf::RenderWindow(sf::VideoMode(width, height), title)),
+Window::Window(int width, int height, const char *title, const Array &data, const int speed)
+    : SPEEDLIMIT(speed),
+      window(new sf::RenderWindow(sf::VideoMode(width, height), title)),
       data(data.getCopy()) {
     window->setVerticalSyncEnabled(true);
     window->setFramerateLimit(60);
@@ -64,7 +65,6 @@ void Window::mainloop() {
         compares.clear();
 
         int processed = 0;
-        const int SPEEDLIMIT = 200;
 
         {
             std::unique_lock<std::mutex> lock(qmtx);

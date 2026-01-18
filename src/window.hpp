@@ -17,7 +17,7 @@ class Array;
 class Window : public Observer {
    public:
     explicit Window(
-        int width, int height, const char *title, const Array &data);
+        int width, int height, const char *title, const Array &data, const int speed);
     void onSwap(size_t i, size_t j) override;
     void onCompare(size_t i, size_t j) override;
     void onCompareValue(size_t i, int v) override;
@@ -55,6 +55,7 @@ class Window : public Observer {
         std::variant<Swap, Compare, CompareValue, Pop, Push, Shuffle>;
 
     const size_t MAX_QUEUE_SIZE = 100;
+    const int SPEEDLIMIT;
 
     void pushCommand(Command cmd);
 
@@ -66,6 +67,7 @@ class Window : public Observer {
 
     std::unique_ptr<sf::RenderWindow> window;
     std::vector<int> data;
+
 };
 
 #endif
