@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
 
     int n = 0;
 
-    std::string sorter_name = ARGV_SHIFT(&argc, &argv);
+    std::string sorter_name = ARGV_SHIFT(&argc, &argv); 
 
     if ((n = parseNumber(ARGV_SHIFT(&argc, &argv))) == -1) {
         print_usage(program_name);
@@ -92,6 +92,7 @@ int main(int argc, char **argv) {
         print_usage(program_name);
         return 1;
     }
+
     int speed = n;
 
     std::string reversed = ARGV_SHIFT(&argc, &argv);
@@ -102,16 +103,16 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    Array arr(elements);
-
-    Window win(800, 600, "SFML sorter viewer", arr, speed);
-    arr.setObserver(&win);
-
     std::unique_ptr<Sorter> sorter = makeSorter(sorter_name, reversed=="t");
     if (sorter == nullptr) {
         print_usage(program_name);
         return 1;
     }
+
+    Array arr(elements);
+
+    Window win(800, 600, "SFML sorter viewer", arr, speed);
+    arr.setObserver(&win);
 
     runSorter(sorter.get(), arr);
     win.mainloop();

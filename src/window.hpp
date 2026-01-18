@@ -54,7 +54,7 @@ class Window : public Observer {
     using Command =
         std::variant<Swap, Compare, CompareValue, Pop, Push, Shuffle>;
 
-    const size_t MAX_QUEUE_SIZE = 100;
+    const size_t MAX_QUEUE_SIZE = 200;
     const int SPEEDLIMIT;
 
     void pushCommand(Command cmd);
