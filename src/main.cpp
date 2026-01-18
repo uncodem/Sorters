@@ -44,49 +44,60 @@ int parseNumber(const char *arg) {
         int ret = std::stoi(arg);
         return ret;
     } catch (const std::exception &e) {
-        std::cerr << arg << std::endl;
         std::cerr << "Error : " << e.what() << std::endl;
         return -1;
     }
 }
 
+void print_usage(const char *program_name) {
+    std::cout << "Usage : " << program_name << " [sorting algorithm] [no. of elements] [actions per frame] [reversed = t/f]" << std::endl;
+    const char* sorters[] = {
+        "Bubble",
+        "Cocktail",
+        "Selection",
+        "Bogo",
+        "Heap",
+        "QuickSort",
+    };
+    const size_t sorter_count = 6;
+
+    std::cout << "Available sorting algorithms : " << std::endl;
+    for (size_t i = 0; i < sorter_count; i++)
+        std::cout << sorters[i] << std::endl;
+}
+
 int main(int argc, char **argv) {
     if (argc != 5) {
-    print_usage:
-        std::cout << "Usage : " << argv[0] << " [sorting algorithm] [no. of elements] [actions per frame] [reversed = t/f]" << std::endl;
-        const char* sorters[] = {
-            "Bubble",
-            "Cocktail",
-            "Selection",
-            "Bogo",
-            "Heap",
-            "QuickSort",
-        };
-        const size_t sorter_count = 6;
-
-        std::cout << "Available sorting algorithms : " << std::endl;
-        for (size_t i = 0; i < sorter_count; i++)
-            std::cout << sorters[i] << std::endl;
-
+        print_usage(argv[0]);
         return 1;
     }
 
-    ARGV_SHIFT(&argc, &argv);
+    const char* program_name = ARGV_SHIFT(&argc, &argv);
 
     int n = 0;
 
     std::string sorter_name = ARGV_SHIFT(&argc, &argv);
 
-    if ((n = parseNumber(ARGV_SHIFT(&argc, &argv))) == -1) goto print_usage;
+    if ((n = parseNumber(ARGV_SHIFT(&argc, &argv))) == -1) {
+        print_usage(program_name);
+        return 1;
+    }
+
     size_t elements = n;
 
-    if ((n = parseNumber(ARGV_SHIFT(&argc, &argv))) == -1) goto print_usage;
+    if ((n = parseNumber(ARGV_SHIFT(&argc, &argv))) == -1) {
+        print_usage(program_name);
+        return 1;
+    }
     int speed = n;
 
     std::string reversed = ARGV_SHIFT(&argc, &argv);
     std::transform(reversed.begin(), reversed.end(), reversed.begin(), [](unsigned char c) {return std::tolower(c);});
 
-    if (reversed != "t" && reversed != "f") goto print_usage;
+    if (reversed != "t" && reversed != "f") {
+        print_usage(program_name);
+        return 1;
+    }
 
     Array arr(elements);
 
@@ -94,7 +105,10 @@ int main(int argc, char **argv) {
     arr.setObserver(&win);
 
     std::unique_ptr<Sorter> sorter = makeSorter(sorter_name, reversed=="t");
-    if (sorter == nullptr) goto print_usage;
+    if (sorter == nullptr) {
+        print_usage(program_name);
+        return 1;
+    }
 
     runSorter(sorter.get(), arr);
     win.mainloop();
