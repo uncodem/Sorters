@@ -50,7 +50,7 @@ void BogoSort::sort(Array &data) {
     while (!sorted) {
         sorted = true;
         for (size_t i = 0; i < n - 1; i++) {
-            int cmp = data.compare(i, i+1);
+            int cmp = data.compare(i, i + 1);
             if ((!reversed && cmp > 0) || (reversed && cmp < 0)) {
                 sorted = false;
                 break;
@@ -74,7 +74,7 @@ void CocktailSort::sort(Array &data) {
         for (size_t i = start; i < end; i++) {
             int cmp = data.compare(i, i + 1);
             if ((!reversed && cmp > 0) || (reversed && cmp < 0)) {
-                data.swap(i, i+1);
+                data.swap(i, i + 1);
                 swapped = true;
             }
         }
@@ -82,7 +82,7 @@ void CocktailSort::sort(Array &data) {
         if (!swapped) break;
 
         --end;
-        for (size_t i = end; i-- > start; ) {
+        for (size_t i = end; i-- > start;) {
             int cmp = data.compare(i, i + 1);
             if ((!reversed && cmp > 0) || (reversed && cmp < 0)) {
                 data.swap(i, i + 1);
@@ -98,7 +98,7 @@ void CocktailSort::sort(Array &data) {
 QuickSort::QuickSort(bool reversed) : reversed(reversed) {}
 const char *QuickSort::name() const { return "QuickSort"; }
 
-size_t QuickSort::partition(Array &data, int low, int high)  {
+size_t QuickSort::partition(Array &data, int low, int high) {
     int pivotIdx = high;
     int i = (low - 1);
 
@@ -106,24 +106,24 @@ size_t QuickSort::partition(Array &data, int low, int high)  {
         int cmp = data.compare(j, pivotIdx);
         if ((!reversed && cmp < 0) || (reversed && cmp > 0)) {
             ++i;
-            data.swap(i,j);
+            data.swap(i, j);
         }
     }
-    data.swap(i+1,high);
-    return i+1;
+    data.swap(i + 1, high);
+    return i + 1;
 }
 
 void QuickSort::quickSort(Array &data, int low, int high) {
     if (low < high) {
         size_t pi = partition(data, low, high);
-        quickSort(data, low, static_cast<int>(pi)-1);
-        quickSort(data, static_cast<int>(pi)+1, high);
+        quickSort(data, low, static_cast<int>(pi) - 1);
+        quickSort(data, static_cast<int>(pi) + 1, high);
     }
 }
 
 void QuickSort::sort(Array &data) {
     if (data.size() == 0 || data.size() == 1) return;
-    quickSort(data, 0, static_cast<int>(data.size())-1);
+    quickSort(data, 0, static_cast<int>(data.size()) - 1);
 }
 
 HeapSort::HeapSort(bool reversed) : reversed(reversed) {}
@@ -136,9 +136,7 @@ void HeapSort::heapify(Array &data, size_t n, size_t i) {
 
     if (left < n) {
         int cmp = data.compare(left, largest);
-        if ((!reversed && cmp > 0) || (reversed && cmp < 0)) {
-            largest = left;
-        }
+        if ((!reversed && cmp > 0) || (reversed && cmp < 0)) { largest = left; }
     }
 
     if (right < n) {
@@ -157,13 +155,10 @@ void HeapSort::heapify(Array &data, size_t n, size_t i) {
 void HeapSort::sort(Array &data) {
     size_t n = data.size();
     if (n == 0 || n == 1) return;
-    for (int i = n / 2; i-- > 0; ) {
-        heapify(data, n, i);
-    }
+    for (int i = n / 2; i-- > 0;) { heapify(data, n, i); }
 
     for (size_t i = n - 1; i > 0; i--) {
         data.swap(0, i);
         heapify(data, i, 0);
     }
 }
-

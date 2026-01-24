@@ -33,42 +33,44 @@ class SelectionSort : public Sorter {
 };
 
 class BogoSort : public Sorter {
-public:
+   public:
     explicit BogoSort(bool reversed = false);
     const char *name() const override;
     void sort(Array &data) override;
-private:
+
+   private:
     bool reversed;
 };
 
 class CocktailSort : public Sorter {
-public:
+   public:
     explicit CocktailSort(bool reversed = false);
     const char *name() const override;
     void sort(Array &data) override;
-private:
+
+   private:
     bool reversed;
 };
 
 class QuickSort : public Sorter {
-public:
+   public:
     QuickSort(bool reversed = false);
     const char *name() const override;
     void sort(Array &data) override;
 
-private:
+   private:
     bool reversed;
     size_t partition(Array &data, int low, int high);
     void quickSort(Array &data, int low, int high);
 };
 
 class HeapSort : public Sorter {
-public:
+   public:
     HeapSort(bool reversed = false);
     const char *name() const override;
     void sort(Array &data) override;
 
-private:
+   private:
     bool reversed;
     void heapify(Array &data, size_t n, size_t i);
 };

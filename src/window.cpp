@@ -6,7 +6,9 @@
 #include "array.hpp"
 #include "closer.hpp"
 
-Window::Window(int width, int height, const char *title, const Array &data, const int speed)
+Window::Window(
+    int width, int height, const char *title, const Array &data,
+    const int speed)
     : SPEEDLIMIT(speed),
       window(new sf::RenderWindow(sf::VideoMode(width, height), title)),
       data(data.getCopy()) {
@@ -42,7 +44,7 @@ void Window::onShuffle(const std::vector<int> &vec) {
 
 void Window::mainloop() {
     float bwidth = static_cast<float>(window->getSize().x) / data.size();
-    
+
     std::set<size_t> actives;
     std::set<size_t> compares;
 
@@ -54,10 +56,11 @@ void Window::mainloop() {
                 qcv.notify_all();
                 window->close();
             } else if (event.type == sf::Event::Resized) {
-                sf::FloatRect visible(0,0, event.size.width, event.size.height);
+                sf::FloatRect visible(
+                    0, 0, event.size.width, event.size.height);
                 window->setView(sf::View(visible));
                 if (!data.empty()) {
-                    bwidth = static_cast<float>(event.size.width)/data.size();
+                    bwidth = static_cast<float>(event.size.width) / data.size();
                 }
             }
         }
@@ -71,32 +74,34 @@ void Window::mainloop() {
             while (!commands.empty() && processed < SPEEDLIMIT) {
                 Command cmd = std::move(commands.front());
                 commands.pop();
-                std::visit([this, &actives, &compares](auto &&arg) {
-                    using T = std::decay_t<decltype(arg)>;
-                    if constexpr (std::is_same_v<T, Swap>) {
-                        std::swap(this->data[arg.i], this->data[arg.j]);
-                        actives.insert(arg.i);
-                        actives.insert(arg.j);
-                    } else if constexpr (std::is_same_v<T, Compare>) {
-                        compares.insert(arg.i);
-                        compares.insert(arg.j);
-                    } else if constexpr (std::is_same_v<T, CompareValue>) {
-                        compares.insert(arg.i);
-                    } else if constexpr (std::is_same_v<T, Pop>) {
-                        this->data.erase(this->data.begin() + arg.i);
-                        actives.insert(arg.i);
-                    } else if constexpr (std::is_same_v<T, Push>) {
-                        this->data.insert(this->data.begin()+arg.i, arg.v);
-                        actives.insert(arg.i);
-                    } else if constexpr (std::is_same_v<T, Shuffle>) {
-                        this->data = arg.data;
-                    }
-                }, cmd);
+                std::visit(
+                    [this, &actives, &compares](auto &&arg) {
+                        using T = std::decay_t<decltype(arg)>;
+                        if constexpr (std::is_same_v<T, Swap>) {
+                            std::swap(this->data[arg.i], this->data[arg.j]);
+                            actives.insert(arg.i);
+                            actives.insert(arg.j);
+                        } else if constexpr (std::is_same_v<T, Compare>) {
+                            compares.insert(arg.i);
+                            compares.insert(arg.j);
+                        } else if constexpr (std::is_same_v<T, CompareValue>) {
+                            compares.insert(arg.i);
+                        } else if constexpr (std::is_same_v<T, Pop>) {
+                            this->data.erase(this->data.begin() + arg.i);
+                            actives.insert(arg.i);
+                        } else if constexpr (std::is_same_v<T, Push>) {
+                            this->data.insert(
+                                this->data.begin() + arg.i, arg.v);
+                            actives.insert(arg.i);
+                        } else if constexpr (std::is_same_v<T, Shuffle>) {
+                            this->data = arg.data;
+                        }
+                    },
+                    cmd);
                 ++processed;
             }
             qcv.notify_all();
         }
-
 
         window->clear(sf::Color::Black);
 
@@ -105,7 +110,8 @@ void Window::mainloop() {
         }
 
         float maxHeight = static_cast<float>(window->getSize().y);
-        int maxVal = data.empty() ? 1 : *std::max_element(data.begin(), data.end());
+        int maxVal =
+            data.empty() ? 1 : *std::max_element(data.begin(), data.end());
         if (maxVal == 0) maxVal = 1;
 
         for (size_t i = 0; i < data.size(); ++i) {
@@ -128,4 +134,3 @@ void Window::mainloop() {
         window->display();
     }
 }
-

@@ -1,6 +1,7 @@
 #ifndef WINDOW_HPP_
 #define WINDOW_HPP_
 
+#include <SFML/Graphics.hpp>
 #include <atomic>
 #include <condition_variable>
 #include <memory>
@@ -8,7 +9,6 @@
 #include <queue>
 #include <variant>
 #include <vector>
-#include <SFML/Graphics.hpp>
 
 #include "observer.hpp"
 
@@ -17,7 +17,8 @@ class Array;
 class Window : public Observer {
    public:
     explicit Window(
-        int width, int height, const char *title, const Array &data, const int speed);
+        int width, int height, const char *title, const Array &data,
+        const int speed);
     void onSwap(size_t i, size_t j) override;
     void onCompare(size_t i, size_t j) override;
     void onCompareValue(size_t i, int v) override;
@@ -67,7 +68,6 @@ class Window : public Observer {
 
     std::unique_ptr<sf::RenderWindow> window;
     std::vector<int> data;
-
 };
 
 #endif
